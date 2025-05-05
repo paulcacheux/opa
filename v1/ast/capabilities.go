@@ -15,9 +15,9 @@ import (
 	"sort"
 	"strings"
 
+	caps "github.com/open-policy-agent/opa/capabilities"
 	"github.com/open-policy-agent/opa/internal/semver"
 	"github.com/open-policy-agent/opa/internal/wasm/sdk/opa/capabilities"
-	caps "github.com/open-policy-agent/opa/v1/capabilities"
 	"github.com/open-policy-agent/opa/v1/util"
 )
 
