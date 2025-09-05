@@ -26,7 +26,6 @@ import (
 	"github.com/open-policy-agent/opa/v1/ir"
 	"github.com/open-policy-agent/opa/v1/loader"
 	"github.com/open-policy-agent/opa/v1/metrics"
-	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/resolver"
 	"github.com/open-policy-agent/opa/v1/storage"
 	"github.com/open-policy-agent/opa/v1/storage/inmem"
@@ -664,8 +663,6 @@ type Rego struct {
 	enablePrintStatements       bool
 	distributedTracingOpts      tracing.Options
 	strict                      bool
-	pluginMgr                   *plugins.Manager
-	plugins                     []TargetPlugin
 	targetPrepState             TargetPluginEval
 	regoVersion                 ast.RegoVersion
 	compilerHook                func(*ast.Compiler)
@@ -1408,19 +1405,6 @@ func New(options ...func(r *Rego)) *Rego {
 
 	if r.generateJSON == nil {
 		r.generateJSON = generateJSON
-	}
-
-	if r.pluginMgr != nil {
-		for _, name := range r.pluginMgr.Plugins() {
-			p := r.pluginMgr.Plugin(name)
-			if p0, ok := p.(TargetPlugin); ok {
-				r.plugins = append(r.plugins, p0)
-			}
-		}
-	}
-
-	if t := r.targetPlugin(r.target); t != nil {
-		r.compiler = r.compiler.WithEvalMode(ast.EvalModeIR)
 	}
 
 	if r.evalMode != nil {
