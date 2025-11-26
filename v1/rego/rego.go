@@ -6,7 +6,6 @@
 package rego
 
 import (
-	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -16,11 +15,9 @@ import (
 	"time"
 
 	bundleUtils "github.com/open-policy-agent/opa/internal/bundle"
-	"github.com/open-policy-agent/opa/internal/compiler/wasm"
 	"github.com/open-policy-agent/opa/internal/future"
 	"github.com/open-policy-agent/opa/internal/planner"
 	"github.com/open-policy-agent/opa/internal/rego/opa"
-	"github.com/open-policy-agent/opa/internal/wasm/encoding"
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/bundle"
 	"github.com/open-policy-agent/opa/v1/ir"
@@ -1638,24 +1635,7 @@ func (r *Rego) Compile(ctx context.Context, opts ...CompileOption) (*CompileResu
 }
 
 func (r *Rego) compileWasm(_ []*ast.Module, queries []ast.Body, qType queryType) (*CompileResult, error) {
-	policy, err := r.planQuery(queries, qType)
-	if err != nil {
-		return nil, err
-	}
-
-	m, err := wasm.New().WithPolicy(policy).Compile()
-	if err != nil {
-		return nil, err
-	}
-
-	var out bytes.Buffer
-	if err := encoding.WriteModule(&out, m); err != nil {
-		return nil, err
-	}
-
-	return &CompileResult{
-		Bytes: out.Bytes(),
-	}, nil
+	return nil, errors.New("wasm target not supported")
 }
 
 // PrepareOption defines a function to set an option to control
